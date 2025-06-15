@@ -1,0 +1,107 @@
+/* Container icon */
+        .social-icons {
+            display: flex;
+            gap: 20px;
+            padding: 15px;
+        }
+        
+        /* Base icon style */
+        .social-icon {
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Hiệu ứng màu nền */
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(
+                from var(--angle),
+                var(--color1),
+                var(--color2),
+                var(--color3)
+            );
+            z-index: -1;
+            transition: all 0.5s ease;
+            opacity: 0.9;
+        }
+        
+        /* Hiệu ứng hover */
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .social-icon:hover::before {
+            opacity: 1;
+            filter: brightness(1.2);
+        }
+        
+        /* Màu sắc từng icon */
+        .icon-fb {
+            --color1: #1877f2;
+            --color2: #0d5fd8;
+            --color3: #0344b5;
+        }
+        
+        .icon-zalo {
+            --color1: #0068ff;
+            --color2: #0055d4;
+            --color3: #003cb0;
+        }
+        
+        .icon-tiktok {
+            --color1: #000000;
+            --color2: #fe2c55;
+            --color3: #25f4ee;
+        }
+        
+        .icon-telegram {
+            --color1: #0088cc;
+            --color2: #0077b5;
+            --color3: #00669e;
+        }
+        
+        .icon-instagram {
+            --color1: #405de6;
+            --color2: #833ab4;
+            --color3: #e1306c;
+        }
+        
+        /* Animation màu chuyển động */
+        @property --angle {
+            syntax: '<angle>';
+            inherits: false;
+            initial-value: 0deg;
+        }
+        
+        @keyframes rotate {
+            to { --angle: 360deg; }
+        }
+        
+        .social-icon::before {
+            animation: rotate 4s linear infinite;
+        }
+         @media (max-width: 500px) {
+            .social-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 15px;
+            }
+            .icon-zalo {
+                font-size: 13px;
+            }
+        }
