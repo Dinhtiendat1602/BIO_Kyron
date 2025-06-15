@@ -141,79 +141,83 @@ const translations = {
   }
 };
 
+function setText(selector, text, html = false) {
+  const el = document.querySelector(selector);
+  if (el) html ? (el.innerHTML = text) : (el.textContent = text);
+}
+
+function setListText(selector, arr, html = false) {
+  const els = document.querySelectorAll(selector);
+  arr.forEach((item, idx) => {
+    if (els[idx]) html ? (els[idx].innerHTML = item) : (els[idx].textContent = item);
+  });
+}
+
 function translatePage(lang) {
-  document.querySelector(".section-title").textContent = translations[lang].highlights;
-  document.querySelectorAll(".card-title")[0].textContent = translations[lang].trader;
-  document.querySelectorAll(".card-content")[0].textContent = translations[lang].traderDesc;
-  document.querySelectorAll(".card-title")[1].textContent = translations[lang].founder;
-  document.querySelectorAll(".card-content")[1].textContent = translations[lang].founderDesc;
+  // Thông tin cá nhân
+  setText('.section-title', translations[lang].highlights);
+  setListText('.card-title', [translations[lang].trader, translations[lang].founder]);
+  setListText('.card-content', [translations[lang].traderDesc, translations[lang].founderDesc]);
 
-  // Dịch phần nghe nhạc
-  const technova = document.querySelector(".logo");
-  if (technova) technova.textContent = translations[lang].technova;
-  const slogan = document.querySelector(".slogan");
-  if (slogan) slogan.textContent = translations[lang].slogan;
-  const technoBeats = document.querySelector(".player-title");
-  if (technoBeats) technoBeats.innerHTML = '<i class="fas fa-headphones"></i> ' + translations[lang].technoBeats;
-  const searchInput = document.querySelector(".search-input");
+  // Phần nghe nhạc
+  setText('.logo', translations[lang].technova);
+  setText('.slogan', translations[lang].slogan);
+  setText('.player-title', `<i class=\"fas fa-headphones\"></i> ${translations[lang].technoBeats}`, true);
+  setText('.search-input', translations[lang].searchPlaceholder);
+  const searchInput = document.querySelector('.search-input');
   if (searchInput) searchInput.placeholder = translations[lang].searchPlaceholder;
-  const notFound = document.getElementById("not-found");
-  if (notFound) notFound.innerHTML = '<i class="fas fa-music"></i> ' + translations[lang].notFound;
+  setText('#not-found', `<i class=\"fas fa-music\"></i> ${translations[lang].notFound}`, true);
 
-  // Dịch tên bài hát và ca sĩ
-  const songTitles = document.querySelectorAll(".song-item-title");
-  const songArtists = document.querySelectorAll(".song-item-artist");
+  // Danh sách bài hát
+  const songTitles = document.querySelectorAll('.song-item-title');
+  const songArtists = document.querySelectorAll('.song-item-artist');
   translations[lang].songs.forEach((song, idx) => {
     if (songTitles[idx]) songTitles[idx].textContent = song.title;
     if (songArtists[idx]) songArtists[idx].textContent = song.artist;
   });
 
-  // Dịch các link mạng xã hội
-  const linkTexts = document.querySelectorAll('.link-text');
-  translations[lang].socialLinks.forEach((item, idx) => {
-    if (linkTexts[idx]) linkTexts[idx].textContent = item.text;
-  });
+  // Link mạng xã hội
+  setListText('.link-text', translations[lang].socialLinks.map(x => x.text));
 
-  // Dịch menu bên trong nút bars (cập nhật triệt để)
+  // Menu chính
   const menuItems = document.querySelectorAll('.menu-item .font-medium');
-  if (menuItems[0]) menuItems[0].textContent = 'Home'; // Nếu có mục Home
-  if (menuItems[1]) menuItems[1].textContent = translations[lang].menu.service;
-  if (menuItems[2]) menuItems[2].textContent = translations[lang].menu.shops;
-  if (menuItems[3]) menuItems[3].textContent = translations[lang].menu.contact;
+  const menuArr = [
+    'Home',
+    translations[lang].menu.service,
+    translations[lang].menu.shops,
+    translations[lang].menu.contact
+  ];
+  setListText('.menu-item .font-medium', menuArr);
 
-  // Dịch submenu dịch vụ
+  // Submenu dịch vụ
   const submenu1 = document.querySelectorAll('.submenu-transition')[0];
   if (submenu1) {
     const items = submenu1.querySelectorAll('li .block');
     const serviceArr = [
-      { icon: '🌐', text: translations[lang].menu.createWeb },
-      { icon: '👤', text: translations[lang].menu.createBio },
-      { icon: '📈', text: translations[lang].menu.trade }
+      `<span class=\"mr-3\">🌐</span> ${translations[lang].menu.createWeb}`,
+      `<span class=\"mr-3\">👤</span> ${translations[lang].menu.createBio}`,
+      `<span class=\"mr-3\">📈</span> ${translations[lang].menu.trade}`
     ];
-    items.forEach((el, idx) => {
-      if (serviceArr[idx]) el.innerHTML = `<span class=\"mr-3\">${serviceArr[idx].icon}</span> ${serviceArr[idx].text}`;
-    });
+    setListText('.submenu-transition:nth-of-type(1) li .block', serviceArr, true);
   }
-  // Dịch submenu shop
+  // Submenu shop
   const submenu2 = document.querySelectorAll('.submenu-transition')[1];
   if (submenu2) {
     const items = submenu2.querySelectorAll('li .block');
     const shopArr = [
-      { icon: '💍', text: translations[lang].menu.jewelry },
-      { icon: '👕', text: translations[lang].menu.clothes },
-      { icon: '🌿', text: translations[lang].menu.amway }
+      `<span class=\"mr-3\">💍</span> ${translations[lang].menu.jewelry}`,
+      `<span class=\"mr-3\">👕</span> ${translations[lang].menu.clothes}`,
+      `<span class=\"mr-3\">🌿</span> ${translations[lang].menu.amway}`
     ];
-    items.forEach((el, idx) => {
-      if (shopArr[idx]) el.innerHTML = `<span class=\"mr-3\">${shopArr[idx].icon}</span> ${shopArr[idx].text}`;
-    });
+    setListText('.submenu-transition:nth-of-type(2) li .block', shopArr, true);
   }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  const select = document.getElementById("language-select");
+document.addEventListener('DOMContentLoaded', function() {
+  const select = document.getElementById('language-select');
   if (select) {
-    select.addEventListener("change", function() {
-      let lang = this.value || "en";
+    select.addEventListener('change', function() {
+      let lang = this.value || 'en';
       translatePage(lang);
     });
   }
